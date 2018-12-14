@@ -1,5 +1,6 @@
 package ve.com.stalin.duxm;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,11 +17,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        boolean registrado = false;
+
+        if(!registrado){
+            Intent registro = new Intent(this, RegistroActivity.class);
+            startActivity(registro);
+        }
+
         setContentView(R.layout.activity_main);
         tblAlertas = (TableLayout) findViewById(R.id.tblAlertas);
 
         TableDynamic tableDynamic = new TableDynamic(tblAlertas, getApplicationContext());
 
         Log.d("Firebase", "token dddd: "+ FirebaseInstanceId.getInstance().getToken());
+
     }
 }

@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Dux M</string>
+
+    <string name="registro_titulo">Registrar Dispositivo</string>
+    <string name="registro_nombre">Nombre</string>
+    <string name="registro_cedula">Cédula</string>
+    <string name="registro_registrar">Registrar</string>
+    <string name="registro_estado">Estado: Inactivo</string>
+
 </resources>
