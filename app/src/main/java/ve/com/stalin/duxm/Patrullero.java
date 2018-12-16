@@ -78,16 +78,14 @@ public class Patrullero {
         // Crear conexión a la API de Dux
         DuxApi duxApi = restAdapter.create(DuxApi.class);
 
-        Call<Patrullero> actualizarPatrulleroCall = duxApi.actualizarPatrullero(new PostPatrulleroBody(nombre, cedula, token));
+        Call<Patrullero> actualizarPatrulleroCall = duxApi.actualizarPatrullero(id, new PutPatrulleroBody(id, nombre, cedula, token));
 
         actualizarPatrulleroCall.enqueue(new Callback<Patrullero>() {
             @Override
             public void onResponse(Call<Patrullero> call, Response<Patrullero> response) {
 
                 if (response.isSuccessful()) {
-
-                    config.activarToken();
-
+                    config.setValor("token", token);
                 } else {
 
                     ApiError apiError = new ApiError(response.code(), response.errorBody());

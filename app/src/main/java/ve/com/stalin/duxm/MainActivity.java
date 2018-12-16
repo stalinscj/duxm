@@ -20,18 +20,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Configuracion config = new Configuracion(getSharedPreferences(Configuracion.PREFS_NOMBRE, Context.MODE_PRIVATE));
+//        getApplicationContext().deleteDatabase(Configuracion.DB_NAME);
+        Configuracion config = new Configuracion(getApplicationContext());
 
         if(!config.estaRegistrado()){
             Intent registro = new Intent(this, RegistroActivity.class);
             startActivity(registro);
         } else {
-            if(!config.estaTokenActivo()){
-                MyFirebaseInstanceIDService myFirebaseInstanceIDService = new MyFirebaseInstanceIDService();
-                myFirebaseInstanceIDService.onTokenRefresh();
-                Toast.makeText(this, "Actualizando su token id...", Toast.LENGTH_SHORT).show();
-                finish();
+            if(!config.estaTokenActualizado()){
+                Patrullero patrullero = config.getPatrullero();
+                patrullero.refrescarDatos(config);
+                Toast.makeText(this, "Actualizando su token...", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -41,6 +40,5 @@ public class MainActivity extends AppCompatActivity {
         TableDynamic tableDynamic = new TableDynamic(tblAlertas, getApplicationContext());
 
         Log.d("Firebase", "token dddd: "+ FirebaseInstanceId.getInstance().getToken());
-
     }
 }

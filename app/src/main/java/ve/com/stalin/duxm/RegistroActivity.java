@@ -88,8 +88,8 @@ public class RegistroActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Patrullero patrullero = response.body();
 
-                    Configuracion config = new Configuracion(getSharedPreferences(Configuracion.PREFS_NOMBRE, Context.MODE_PRIVATE));
-                    config.registrarDispositivo(patrullero.getNombre(), patrullero.getCedula(), patrullero.getToken());
+                    Configuracion config = new Configuracion(getApplicationContext());
+                    config.registrarDispositivo(patrullero.getId(), patrullero.getNombre(), patrullero.getCedula(), patrullero.getToken());
 
                     Toast.makeText(RegistroActivity.this, "Registro Exitoso, esperando su activación", Toast.LENGTH_SHORT).show();
 
