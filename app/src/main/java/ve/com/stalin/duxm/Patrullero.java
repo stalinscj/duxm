@@ -1,5 +1,16 @@
 package ve.com.stalin.duxm;
 
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+import android.widget.Toast;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class Patrullero {
 
     private String id;
@@ -54,5 +65,43 @@ public class Patrullero {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public void refrescarDatos(final Configuracion config) {
+
+        // Crear conexión al servicio REST
+        Retrofit restAdapter = new Retrofit.Builder()
+                .baseUrl(DuxApi.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Crear conexión a la API de Dux
+        DuxApi duxApi = restAdapter.create(DuxApi.class);
+
+        Call<Patrullero> actualizarPatrulleroCall = duxApi.actualizarPatrullero(new PostPatrulleroBody(nombre, cedula, token));
+
+        actualizarPatrulleroCall.enqueue(new Callback<Patrullero>() {
+            @Override
+            public void onResponse(Call<Patrullero> call, Response<Patrullero> response) {
+
+                if (response.isSuccessful()) {
+
+                    config.activarToken();
+
+                } else {
+
+                    ApiError apiError = new ApiError(response.code(), response.errorBody());
+
+                    for (String error: apiError.getErrors()) {
+                        Log.e("Error: ", error);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Patrullero> call, Throwable t) {
+                Log.e("Error: ", t.getMessage());
+            }
+        });
     }
 }

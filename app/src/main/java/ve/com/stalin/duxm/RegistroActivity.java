@@ -1,5 +1,6 @@
 package ve.com.stalin.duxm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -85,7 +86,13 @@ public class RegistroActivity extends AppCompatActivity {
                 showProgress(false);
 
                 if (response.isSuccessful()) {
+                    Patrullero patrullero = response.body();
+
+                    Configuracion config = new Configuracion(getSharedPreferences(Configuracion.PREFS_NOMBRE, Context.MODE_PRIVATE));
+                    config.registrarDispositivo(patrullero.getNombre(), patrullero.getCedula(), patrullero.getToken());
+
                     Toast.makeText(RegistroActivity.this, "Registro Exitoso, esperando su activación", Toast.LENGTH_SHORT).show();
+
                     Intent main = new Intent(RegistroActivity.this, MainActivity.class);
                     startActivity(main);
                 } else {
