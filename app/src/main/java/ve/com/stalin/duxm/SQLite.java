@@ -18,7 +18,7 @@ public class SQLite extends SQLiteOpenHelper {
                     "valor TEXT NOT NULL" +
                 ")");
 
-        db.execSQL("CREATE TABLE alertas (" +
+        db.execSQL("CREATE TABLE notificaciones (" +
                     "id              INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "id_alerta       INTEGER NOT NULL," +
                     "id_patrullero   INTEGER NOT NULL," +

@@ -4,18 +4,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
-    private TableLayout tblAlertas;
-    private Button btn;
+    private ArrayList<Notificacion> notificaciones;
+
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private NotificacionAdapter notificacionAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +41,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_main);
-        tblAlertas = (TableLayout) findViewById(R.id.tblAlertas);
 
-        TableDynamic tableDynamic = new TableDynamic(tblAlertas, getApplicationContext());
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView = findViewById(R.id.notificacionesRecyclerView);
+        recyclerView.setLayoutManager(layoutManager);
 
-        Log.d("Firebase", "token dddd: "+ FirebaseInstanceId.getInstance().getToken());
+        this.notificaciones = this.generateNotificaciones();
+
+        notificacionAdapter = new NotificacionAdapter(this.notificaciones);
+
+        recyclerView.setAdapter(notificacionAdapter);
+
     }
+
+    private ArrayList<Notificacion> generateNotificaciones() {
+        ArrayList<Notificacion> notificaciones = new ArrayList<Notificacion>();
+
+        for (int i=0; i<10; i++){
+            Notificacion notificacion = new Notificacion(i, i+"ABCDEF", "Puerto Ordaz - San Félix", "11:30 pm 31-12-2018", false);
+            notificaciones.add(notificacion);
+        }
+
+        return notificaciones;
+    }
+
+
 }
