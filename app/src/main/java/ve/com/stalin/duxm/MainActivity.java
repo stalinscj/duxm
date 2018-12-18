@@ -42,13 +42,17 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+
+
+
         layoutManager = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.notificacionesRecyclerView);
         recyclerView.setLayoutManager(layoutManager);
 
-        this.notificaciones = this.generateNotificaciones();
+        config.llenarNotificaciones();
+        this.notificaciones = config.getNotificaciones(); //this.generateNotificaciones();
 
-        notificacionAdapter = new NotificacionAdapter(this.notificaciones);
+        notificacionAdapter = new NotificacionAdapter(this, this.notificaciones);
 
         recyclerView.setAdapter(notificacionAdapter);
 
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Notificacion> notificaciones = new ArrayList<Notificacion>();
 
         for (int i=0; i<10; i++){
-            Notificacion notificacion = new Notificacion(i, i+"ABCDEF", "Puerto Ordaz - San Félix", "11:30 pm 31-12-2018", false);
+            Notificacion notificacion = new Notificacion(i, true, true, true, "11:30 am 31-12-2017", "11:30 am 31-12-2018", "11:30 am 31-12-2016", i+"ABCDEF", "Puerto Ordaz - San Félix", "img");
             notificaciones.add(notificacion);
         }
 

@@ -1,5 +1,6 @@
 package ve.com.stalin.duxm;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,15 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapter.NotificacionViewHolder> {
 
     private ArrayList<Notificacion> notificaciones;
+    private View.OnClickListener listener;
+    private Context context;
 
-    public NotificacionAdapter(ArrayList<Notificacion> notificaciones) {
+    public NotificacionAdapter(Context context, ArrayList<Notificacion> notificaciones) {
         this.notificaciones = notificaciones;
+        this.context = context;
     }
 
     @NonNull
@@ -24,7 +29,7 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.card_view_notificacion, null, false);
 
-        return new NotificacionViewHolder(view);
+        return new NotificacionViewHolder(view, this.context, this.notificaciones);
     }
 
     @Override
@@ -45,7 +50,10 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
         this.notificaciones = notificaciones;
     }
 
-    public class NotificacionViewHolder extends RecyclerView.ViewHolder {
+
+
+
+    public class NotificacionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView imgAtendida;
         private TextView txtPlaca;
@@ -53,19 +61,37 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
         private TextView txtFecha;
         private ImageView imgClick;
 
-        public NotificacionViewHolder(@NonNull View itemView) {
+        private ArrayList<Notificacion> notificaciones;
+
+        private Context context;
+
+        public NotificacionViewHolder(@NonNull View itemView, Context context, ArrayList<Notificacion> notificaciones) {
             super(itemView);
             this.imgAtendida = itemView.findViewById(R.id.imgAtendida);
             this.txtPlaca = itemView.findViewById(R.id.txtPlaca);
             this.txtDireccion = itemView.findViewById(R.id.txtDireccion);
             this.txtFecha = itemView.findViewById(R.id.txtFecha);
             this.imgClick = itemView.findViewById(R.id.imgClick);
+
+            this.notificaciones = notificaciones;
+
+            this.context = context;
+
+            itemView.setOnClickListener(this);
         }
 
         public void setNotificacion(Notificacion notificacion) {
             txtPlaca.setText(notificacion.getPlaca());
             txtDireccion.setText(notificacion.getDireccion());
             txtFecha.setText(notificacion.getFecha_lectura());
+        }
+
+        @Override
+        public void onClick(View v) {
+            int i = getAdapterPosition();
+            Notificacion notificacion = this.notificaciones.get(i);
+
+            Toast.makeText(this.context, notificacion.getPlaca(), Toast.LENGTH_SHORT).show();
         }
     }
 }

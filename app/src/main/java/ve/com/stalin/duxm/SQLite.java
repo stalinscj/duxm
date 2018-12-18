@@ -19,14 +19,16 @@ public class SQLite extends SQLiteOpenHelper {
                 ")");
 
         db.execSQL("CREATE TABLE notificaciones (" +
-                    "id              INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "id_alerta       INTEGER NOT NULL," +
-                    "id_patrullero   INTEGER NOT NULL," +
+                    "id              INTEGER PRIMARY KEY," +
                     "entregada       TEXT NOT NULL CHECK (entregada IN ('0','1'))," +
                     "alcanzado       TEXT NOT NULL CHECK (alcanzado IN ('0','1'))," +
                     "atendida        TEXT NOT NULL CHECK (atendida IN ('0','1'))," +
                     "fecha_entregada TEXT," +
-                    "fecha_atendida  TEXT" +
+                    "fecha_atendida  TEXT," +
+                    "fecha_lectura   TEXT," +
+                    "placa           TEXT," +
+                    "direccion       TEXT," +
+                    "imagen_str      TEXT"  +
                 ")");
     }
 
