@@ -1,5 +1,21 @@
 package ve.com.stalin.duxm;
 
+import android.util.Log;
+
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class Notificacion {
 
     private int id;
@@ -105,5 +121,69 @@ public class Notificacion {
 
     public void setImagen_str(String imagen_str) {
         this.imagen_str = imagen_str;
+    }
+
+    public static Notificacion getAlertaDetalle(int alertaId) {
+
+        try {
+            // Crear conexión al servicio REST
+            Retrofit restAdapter = new Retrofit.Builder()
+                    .baseUrl(DuxApi.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            // Crear conexión a la API de Dux
+            DuxApi duxApi = restAdapter.create(DuxApi.class);
+
+            Call<ResponseBody> getAlertaDetalleCall = duxApi.getAlertaDetalle(alertaId);
+            ResponseBody response = getAlertaDetalleCall.execute().body();
+            JsonObject json = (new JsonParser()).parse(response.string()).getAsJsonObject();
+
+            return new Notificacion(
+                alertaId,
+                true,
+                false,
+                false,
+                "",
+                "",
+                    json.get("fecha_lectura").getAsString(),
+                    json.get("matricula").getAsString(),
+                    json.get("direccion").getAsString(),
+                    json.get("imagen").getAsString()
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static int actualizarNotificacion(String alertaId, String patrulleroId, String entregada, String alcanzado, String atendida, String fecha_entregada, String fecha_atendida) {
+
+        try {
+            // Crear conexión al servicio REST
+            Retrofit restAdapter = new Retrofit.Builder()
+                    .baseUrl(DuxApi.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            // Crear conexión a la API de Dux
+            DuxApi duxApi = restAdapter.create(DuxApi.class);
+
+            PutNotificacionBody putNotificacionBody = new PutNotificacionBody(alertaId, patrulleroId, entregada, alcanzado, atendida, fecha_entregada, fecha_atendida);
+
+            Call<ResponseBody> actualizarNotificacionCall = duxApi.actualizarNotificacion("0", putNotificacionBody);
+            ResponseBody responseBody = actualizarNotificacionCall.execute().body();
+            String response = responseBody.string();
+
+            JsonParser jsonParser = new JsonParser();
+            JsonElement jsonElement = jsonParser.parse(response);
+            JsonObject json = jsonElement.getAsJsonObject();
+
+            return json.get("id").getAsInt();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }

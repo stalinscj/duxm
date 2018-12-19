@@ -96,7 +96,7 @@ public class Configuracion {
 
         String[] direcciones = {"Puerto Ordaz - San Félix", "San Félix - Puerto Ordaz", "Ciudad Bolívar - Puerto Ordaz", "Puerto Ordaz - Ciudad Bolívar"};
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 0; i++) {
             int id = i;
 
             Random random = new Random();
@@ -177,5 +177,29 @@ public class Configuracion {
         this.db.close();
 
         return notificaciones;
+    }
+
+    public void guardarNotificacion(Notificacion notificacion) {
+        this.sqlite = new SQLite(context, Configuracion.DB_NAME, null, 1);
+        this.db = this.sqlite.getWritableDatabase();
+
+        this.db.execSQL("DELETE FROM notificaciones WHERE id="+notificacion.getId());
+
+        ContentValues values = new ContentValues();
+        values.put("id", notificacion.getId());
+        values.put("entregada", notificacion.isEntregada());
+        values.put("alcanzado", notificacion.isAlcanzado());
+        values.put("atendida", notificacion.isAtendida());
+        values.put("fecha_entregada", notificacion.getFecha_entregada());
+        values.put("fecha_atendida", notificacion.getFecha_atendida());
+        values.put("fecha_lectura", notificacion.getFecha_lectura());
+        values.put("placa", notificacion.getPlaca());
+        values.put("direccion", notificacion.getDireccion());
+        values.put("imagen_str", notificacion.getImagen_str());
+
+        this.db.insert("notificaciones", null, values);
+
+        this.db.close();
+
     }
 }

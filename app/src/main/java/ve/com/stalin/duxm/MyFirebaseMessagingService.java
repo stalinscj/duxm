@@ -10,6 +10,13 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String LOGTAG = "android-fcm";
@@ -31,18 +38,47 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             //Opcional: mostramos la notificación en la barra de estado
 //            showNotification(titulo, texto);
         }else{
-            String msj = remoteMessage.getData().toString();
-            Log.e(LOGTAG, msj);
-//            Uri sound= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//            builder.setSound(sound);
+//            String msj = remoteMessage.getData().toString();
+//            Log.e(LOGTAG, msj);
 
-            showNotification("Titulo", "Prueba.......");
+            Map<String, String> data = remoteMessage.getData();
+            int alertaId = Integer.parseInt(data.get("alerta_id"));
+            int lecuraId = Integer.parseInt(data.get("lectura_id"));
+            String fecha = data.get("fecha");
 
+
+            Notificacion notificacion = null;
+
+            boolean estaEnElPerimetro = true;
+
+            if(estaEnElPerimetro){
+                notificacion = Notificacion.getAlertaDetalle(alertaId);
+            }
+
+            Configuracion config = new Configuracion(getApplicationContext());
+
+
+            String fechaEntregada = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+            int idNotificacion = Notificacion.actualizarNotificacion(String.valueOf(alertaId), config.getValor("id"), Boolean.toString(true), Boolean.toString(estaEnElPerimetro), Boolean.toString(false), fechaEntregada, null);
+
+            if (notificacion!=null){
+                notificacion.setId(idNotificacion);
+                notificacion.setAlcanzado(estaEnElPerimetro);
+                notificacion.setFecha_entregada(fechaEntregada);
+
+                config.guardarNotificacion(notificacion);
+
+                String titulo = String.format("Matrícula %s Solicitada", notificacion.getPlaca());
+                String texto = String.format("Dirección %s", notificacion.getDireccion());
+
+                showNotification(titulo, texto);
+            }
         }
     }
 
     private void showNotification(String title, String text) {
-        Uri sound= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this)
