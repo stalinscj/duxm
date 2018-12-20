@@ -1,7 +1,9 @@
 package ve.com.stalin.duxm;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -60,24 +62,30 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 String titulo = String.format("Matrícula %s Solicitada", notificacion.getPlaca());
                 String texto = String.format("Dirección: %s", notificacion.getDireccion());
 
-                showNotification(titulo, texto);
+                showNotification(titulo, texto, idNotificacion);
             }
         }
     }
 
-    private void showNotification(String title, String text) {
+    private void showNotification(String title, String text, int idNotificacion) {
+
+        Intent intent = new Intent(this, DetalleActivity.class);
+        intent.putExtra("idNotificacion", idNotificacion);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0, intent,0);
+
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(android.R.drawable.stat_sys_warning)
-                        .setContentTitle(title)
-                        .setContentText(text)
-                        .setSound(sound);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+            .setContentIntent(pendingIntent).setAutoCancel(true)
+            .setSmallIcon(android.R.drawable.stat_sys_warning)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setSound(sound);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0, notificationBuilder.build());
     }
+
+
 }
