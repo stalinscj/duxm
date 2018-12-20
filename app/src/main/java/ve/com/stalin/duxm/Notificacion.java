@@ -149,7 +149,7 @@ public class Notificacion {
                     json.get("fecha_lectura").getAsString(),
                     json.get("matricula").getAsString(),
                     json.get("direccion").getAsString(),
-                    json.get("imagen").getAsString()
+                    json.get("imagen").getAsString().replace("data:image/png;base64,", "")
             );
 
         } catch (Exception e) {

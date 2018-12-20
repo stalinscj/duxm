@@ -202,4 +202,34 @@ public class Configuracion {
         this.db.close();
 
     }
+
+    public Notificacion getNotificacion (int idNotificacion) {
+        this.sqlite = new SQLite(context, Configuracion.DB_NAME, null, 1);
+        this.db = this.sqlite.getWritableDatabase();
+
+        Notificacion notificacion = null;
+
+        Cursor fila = this.db.rawQuery("SELECT * FROM notificaciones WHERE id="+idNotificacion, null);
+
+        if (fila.moveToFirst()){
+
+            int id = fila.getInt(0);
+            boolean entregada = fila.getInt(1)==1 ? true:false;
+            boolean alcanzado = fila.getInt(2)==1 ? true:false;
+            boolean atendida = fila.getInt(3)==1 ? true:false;
+            String fecha_entregada = fila.getString(4);
+            String fecha_atendida = fila.getString(5);
+            String fecha_lectura = fila.getString(6);
+            String placa = fila.getString(7);
+            String direccion = fila.getString(8);
+            String imagen_str = fila.getString(9);
+
+            notificacion = new Notificacion(id, entregada, alcanzado, atendida, fecha_entregada, fecha_atendida, fecha_lectura, placa, direccion, imagen_str);
+
+        }
+
+        this.db.close();
+
+        return notificacion;
+    }
 }

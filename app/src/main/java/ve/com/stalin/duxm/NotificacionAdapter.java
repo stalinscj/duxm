@@ -1,8 +1,10 @@
 package ve.com.stalin.duxm;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,6 @@ import java.util.ArrayList;
 public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapter.NotificacionViewHolder> {
 
     private ArrayList<Notificacion> notificaciones;
-    private View.OnClickListener listener;
     private Context context;
 
     public NotificacionAdapter(Context context, ArrayList<Notificacion> notificaciones) {
@@ -63,7 +64,6 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
 
         private ArrayList<Notificacion> notificaciones;
 
-        private Context context;
 
         public NotificacionViewHolder(@NonNull View itemView, Context context, ArrayList<Notificacion> notificaciones) {
             super(itemView);
@@ -75,7 +75,6 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
 
             this.notificaciones = notificaciones;
 
-            this.context = context;
 
             itemView.setOnClickListener(this);
         }
@@ -91,7 +90,13 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
             int i = getAdapterPosition();
             Notificacion notificacion = this.notificaciones.get(i);
 
-            Toast.makeText(this.context, notificacion.getPlaca(), Toast.LENGTH_SHORT).show();
+//            Log.d("CV", "onClick: clicked on: " + notificaciones.get(i));
+
+//            Toast.makeText(context, notificaciones.get(i).getPlaca(), Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(context, DetalleActivity.class);
+            intent.putExtra("idNotificacion", notificacion.getId());
+            context.startActivity(intent);
         }
     }
 }

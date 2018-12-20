@@ -14,9 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String LOGTAG = "android-fcm";
@@ -35,17 +32,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(LOGTAG, "Texto: " + texto);
 //            Log.d(LOGTAG, "Msj: " + msj);
 
-            //Opcional: mostramos la notificación en la barra de estado
-//            showNotification(titulo, texto);
         }else{
-//            String msj = remoteMessage.getData().toString();
-//            Log.e(LOGTAG, msj);
-
             Map<String, String> data = remoteMessage.getData();
             int alertaId = Integer.parseInt(data.get("alerta_id"));
-            int lecuraId = Integer.parseInt(data.get("lectura_id"));
-            String fecha = data.get("fecha");
-
 
             Notificacion notificacion = null;
 
@@ -56,7 +45,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
 
             Configuracion config = new Configuracion(getApplicationContext());
-
 
             String fechaEntregada = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
@@ -70,7 +58,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 config.guardarNotificacion(notificacion);
 
                 String titulo = String.format("Matrícula %s Solicitada", notificacion.getPlaca());
-                String texto = String.format("Dirección %s", notificacion.getDireccion());
+                String texto = String.format("Dirección: %s", notificacion.getDireccion());
 
                 showNotification(titulo, texto);
             }
