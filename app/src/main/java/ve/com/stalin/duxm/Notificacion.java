@@ -198,4 +198,44 @@ public class Notificacion {
             return 0;
         }
     }
+
+    public static int actualizarNotificacion(Notificacion notificacion, boolean strictMode) {
+        try {
+            if(!strictMode){
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+                StrictMode.setThreadPolicy(policy);
+            }
+
+            //String alertaId = notificacion.get, String patrulleroId, String entregada, String alcanzado, String atendida, String fecha_entregada, String fecha_atendida, boolean strictMode
+            Retrofit restAdapter = new Retrofit.Builder()
+                    .baseUrl(DuxApi.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            DuxApi duxApi = restAdapter.create(DuxApi.class);
+
+            String id = String.valueOf(notificacion.getId());
+            String entregada = notificacion.isEntregada() ? "true" : "false";
+            String alcanzado = notificacion.isAlcanzado() ? "true" : "false";
+            String atendida = notificacion.isAtendida() ? "true" : "false";
+            String fechaEntregada = notificacion.getFecha_entregada();
+            String fechaAtendida = notificacion.getFecha_atendida();
+
+            PutNotificacionBody putNotificacionBody = new PutNotificacionBody("0","0", entregada, alcanzado, atendida, fechaEntregada, fechaAtendida);
+
+            Call<ResponseBody> actualizarNotificacionCall = duxApi.actualizarNotificacion(id, putNotificacionBody);
+            ResponseBody responseBody = actualizarNotificacionCall.execute().body();
+            String response = responseBody.string();
+
+            JsonParser jsonParser = new JsonParser();
+            JsonElement jsonElement = jsonParser.parse(response);
+            JsonObject json = jsonElement.getAsJsonObject();
+
+            return json.get("id").getAsInt();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }

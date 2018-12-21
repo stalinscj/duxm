@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.os.StrictMode;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -31,7 +32,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         Map<String, String> data = remoteMessage.getData();
-        
+
         this.alertaId = Integer.parseInt(data.get("alerta_id"));
         this.latitudPeaje = Double.parseDouble(data.get("latitud"));
         this.longitudPeaje = Double.parseDouble(data.get("longitud"));
@@ -80,7 +81,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Intent intent = new Intent(this, DetalleActivity.class);
         intent.putExtra("idNotificacion", idNotificacion);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0, intent,0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 

@@ -86,8 +86,8 @@ public class Localizacion {
 
             boolean estaEnElPerimetro = distancia <= radio;
 
-            Toast.makeText(context, String.format("Distacia: %f Radio: %f Está: %d", distancia, radio, (estaEnElPerimetro==true?1:0) ), Toast.LENGTH_LONG).show();
-            Log.e("Res: ", String.format("Distacia: %f Radio: %f Está: %d", distancia, radio, (estaEnElPerimetro==true?1:0)));
+//            Toast.makeText(context, String.format("Distacia: %f Radio: %f Está: %d", distancia, radio, (estaEnElPerimetro==true?1:0) ), Toast.LENGTH_LONG).show();
+//            Log.e("Res: ", String.format("Distacia: %f Radio: %f Está: %d", distancia, radio, (estaEnElPerimetro==true?1:0)));
             locationManager.removeUpdates(locationListener);
 
             myFirebaseMessagingService.checkNotificacionPush(estaEnElPerimetro);

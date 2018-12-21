@@ -154,7 +154,7 @@ public class Configuracion {
 
         ArrayList<Notificacion> notificaciones = new ArrayList<Notificacion>();
 
-        Cursor fila = this.db.rawQuery("SELECT * FROM notificaciones", null);
+        Cursor fila = this.db.rawQuery("SELECT * FROM notificaciones ORDER BY id DESC", null);
 
         while (fila.moveToNext()){
 
@@ -230,5 +230,14 @@ public class Configuracion {
         this.db.close();
 
         return notificacion;
+    }
+
+    public void eliminarNotificacion(int id) {
+        this.sqlite = new SQLite(context, Configuracion.DB_NAME, null, 1);
+        this.db = this.sqlite.getWritableDatabase();
+
+        this.db.execSQL("DELETE FROM notificaciones WHERE id="+id);
+
+        this.db.close();
     }
 }

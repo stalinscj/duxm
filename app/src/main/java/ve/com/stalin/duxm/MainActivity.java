@@ -26,7 +26,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        getApplicationContext().deleteDatabase(Configuracion.DB_NAME);
+
+        setContentView(R.layout.activity_main);
+
+        this.layoutManager = new LinearLayoutManager(this);
+        this.recyclerView = findViewById(R.id.notificacionesRecyclerView);
+        this.recyclerView.setLayoutManager(layoutManager);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //getApplicationContext().deleteDatabase(Configuracion.DB_NAME);
         Configuracion config = new Configuracion(getApplicationContext());
 
         if(!config.estaRegistrado()){
@@ -40,18 +52,16 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        setContentView(R.layout.activity_main);
-
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView = findViewById(R.id.notificacionesRecyclerView);
-        recyclerView.setLayoutManager(layoutManager);
-
-//        config.llenarNotificaciones();
+        //        config.llenarNotificaciones();
         this.notificaciones = config.getNotificaciones(); //this.generateNotificaciones();
 
-        notificacionAdapter = new NotificacionAdapter(this, this.notificaciones);
+        this.notificacionAdapter = new NotificacionAdapter(this, this.notificaciones);
 
-        recyclerView.setAdapter(notificacionAdapter);
+        this.recyclerView.setAdapter(notificacionAdapter);
+
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+
+        Log.e("Token: ", "Token actualizado: " + refreshedToken);
     }
 
     private ArrayList<Notificacion> generateNotificaciones() {

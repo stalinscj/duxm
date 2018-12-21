@@ -57,22 +57,33 @@
 
         <CheckBox
             android:id="@+id/chkAtendida"
-            android:text="Notificación Atendida"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="20dp"
-            android:textSize="16dp"
             android:button="@null"
-            android:drawableRight="?android:attr/listChoiceIndicatorMultiple"/>
+            android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+            android:onClick="toggleBtnGuardar"
+            android:text="Notificación Atendida"
+            android:textSize="16dp" />
 
         <Button
             android:id="@+id/btnGuardarNotificacion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:textStyle="bold"
-            android:text="Guardar" />
+            android:onClick="guardarNotificacion"
+            android:text="Guardar"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnEliminarNotificacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:onClick="eliminarNotificacion"
+            android:text="Eliminar"
+            android:textStyle="bold" />
 
 
     </LinearLayout>
