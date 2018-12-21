@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.StrictMode;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -19,55 +22,61 @@ import java.util.Map;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String LOGTAG = "android-fcm";
+    private int alertaId;
+    private double latitudPeaje;
+    private double longitudPeaje;
+    private double radio;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        if (remoteMessage.getNotification() != null) {
+        Map<String, String> data = remoteMessage.getData();
+        
+        this.alertaId = Integer.parseInt(data.get("alerta_id"));
+        this.latitudPeaje = Double.parseDouble(data.get("latitud"));
+        this.longitudPeaje = Double.parseDouble(data.get("longitud"));
+        this.radio = Double.parseDouble(data.get("radio"));
 
-            String titulo = remoteMessage.getNotification().getTitle();
-            String texto = remoteMessage.getNotification().getBody();
-//            String msj = remoteMessage.getData().toString();
+        Handler h = new Handler(Looper.getMainLooper());
+        h.post(new Runnable() {
+            public void run() {
+                Localizacion localizacion = new Localizacion(MyFirebaseMessagingService.this, MyFirebaseMessagingService.this);
 
-            Log.d(LOGTAG, "NOTIFICACION RECIBIDA");
-            Log.d(LOGTAG, "Título: " + titulo);
-            Log.d(LOGTAG, "Texto: " + texto);
-//            Log.d(LOGTAG, "Msj: " + msj);
-
-        }else{
-            Map<String, String> data = remoteMessage.getData();
-            int alertaId = Integer.parseInt(data.get("alerta_id"));
-
-            Notificacion notificacion = null;
-
-            boolean estaEnElPerimetro = true;
-
-            if(estaEnElPerimetro){
-                notificacion = Notificacion.getAlertaDetalle(alertaId);
+                localizacion.verificarUbicacion(latitudPeaje, longitudPeaje, radio);
             }
-
-            Configuracion config = new Configuracion(getApplicationContext());
-
-            String fechaEntregada = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-
-            int idNotificacion = Notificacion.actualizarNotificacion(String.valueOf(alertaId), config.getValor("id"), Boolean.toString(true), Boolean.toString(estaEnElPerimetro), Boolean.toString(false), fechaEntregada, null);
-
-            if (notificacion!=null){
-                notificacion.setId(idNotificacion);
-                notificacion.setAlcanzado(estaEnElPerimetro);
-                notificacion.setFecha_entregada(fechaEntregada);
-
-                config.guardarNotificacion(notificacion);
-
-                String titulo = String.format("Matrícula %s Solicitada", notificacion.getPlaca());
-                String texto = String.format("Dirección: %s", notificacion.getDireccion());
-
-                showNotification(titulo, texto, idNotificacion);
-            }
-        }
+        });
     }
 
-    private void showNotification(String title, String text, int idNotificacion) {
+    public void checkNotificacionPush(boolean estaEnElPerimetro){
+
+        Notificacion notificacion = null;
+
+        if(estaEnElPerimetro){
+            notificacion = Notificacion.getAlertaDetalle(alertaId);
+        }
+
+        Configuracion config = new Configuracion(getApplicationContext());
+
+        String fechaEntregada = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+        int idNotificacion = Notificacion.actualizarNotificacion(String.valueOf(alertaId), config.getValor("id"), Boolean.toString(true), Boolean.toString(estaEnElPerimetro), Boolean.toString(false), fechaEntregada, null, false);
+
+        if (notificacion!=null){
+            notificacion.setId(idNotificacion);
+            notificacion.setAlcanzado(estaEnElPerimetro);
+            notificacion.setFecha_entregada(fechaEntregada);
+
+            config.guardarNotificacion(notificacion);
+
+            String titulo = String.format("Matrícula %s Solicitada", notificacion.getPlaca());
+            String texto = String.format("Dirección: %s", notificacion.getDireccion());
+
+            showNotificacionPush(titulo, texto, idNotificacion);
+        }
+
+    }
+
+    private void showNotificacionPush(String title, String text, int idNotificacion) {
 
         Intent intent = new Intent(this, DetalleActivity.class);
         intent.putExtra("idNotificacion", idNotificacion);
@@ -86,6 +95,4 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         notificationManager.notify(0, notificationBuilder.build());
     }
-
-
 }

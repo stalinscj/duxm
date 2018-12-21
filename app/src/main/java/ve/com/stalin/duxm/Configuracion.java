@@ -225,7 +225,6 @@ public class Configuracion {
             String imagen_str = fila.getString(9);
 
             notificacion = new Notificacion(id, entregada, alcanzado, atendida, fecha_entregada, fecha_atendida, fecha_lectura, placa, direccion, imagen_str);
-
         }
 
         this.db.close();

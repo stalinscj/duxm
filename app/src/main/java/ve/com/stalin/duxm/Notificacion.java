@@ -1,5 +1,6 @@
 package ve.com.stalin.duxm;
 
+import android.os.StrictMode;
 import android.util.Log;
 
 
@@ -41,6 +42,7 @@ public class Notificacion {
         this.placa = placa;
         this.direccion = direccion;
         this.imagen_str = imagen_str;
+
     }
 
     public int getId() {
@@ -126,6 +128,10 @@ public class Notificacion {
     public static Notificacion getAlertaDetalle(int alertaId) {
 
         try {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+            StrictMode.setThreadPolicy(policy);
+
             // Crear conexión al servicio REST
             Retrofit restAdapter = new Retrofit.Builder()
                     .baseUrl(DuxApi.BASE_URL)
@@ -158,9 +164,15 @@ public class Notificacion {
         }
     }
 
-    public static int actualizarNotificacion(String alertaId, String patrulleroId, String entregada, String alcanzado, String atendida, String fecha_entregada, String fecha_atendida) {
+    public static int actualizarNotificacion(String alertaId, String patrulleroId, String entregada, String alcanzado, String atendida, String fecha_entregada, String fecha_atendida, boolean strictMode) {
 
         try {
+            if(!strictMode){
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+                StrictMode.setThreadPolicy(policy);
+            }
+
             // Crear conexión al servicio REST
             Retrofit restAdapter = new Retrofit.Builder()
                     .baseUrl(DuxApi.BASE_URL)

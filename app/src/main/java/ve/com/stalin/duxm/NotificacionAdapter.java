@@ -52,8 +52,6 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
     }
 
 
-
-
     public class NotificacionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView imgAtendida;
@@ -89,10 +87,6 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
         public void onClick(View v) {
             int i = getAdapterPosition();
             Notificacion notificacion = this.notificaciones.get(i);
-
-//            Log.d("CV", "onClick: clicked on: " + notificaciones.get(i));
-
-//            Toast.makeText(context, notificaciones.get(i).getPlaca(), Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(context, DetalleActivity.class);
             intent.putExtra("idNotificacion", notificacion.getId());
