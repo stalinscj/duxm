@@ -2,7 +2,9 @@ package ve.com.stalin.duxm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,6 +61,7 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
         private TextView txtDireccion;
         private TextView txtFecha;
         private ImageView imgClick;
+        private CardView cardView;
 
         private ArrayList<Notificacion> notificaciones;
 
@@ -70,6 +73,7 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
             this.txtDireccion = itemView.findViewById(R.id.txtDireccion);
             this.txtFecha = itemView.findViewById(R.id.txtFecha);
             this.imgClick = itemView.findViewById(R.id.imgClick);
+            this.cardView = itemView.findViewById(R.id.cardNotificacion);
 
             this.notificaciones = notificaciones;
 
@@ -81,6 +85,9 @@ public class NotificacionAdapter extends RecyclerView.Adapter<NotificacionAdapte
             txtPlaca.setText(notificacion.getPlaca());
             txtDireccion.setText(notificacion.getDireccion());
             txtFecha.setText(notificacion.getFecha_lectura());
+            if(!notificacion.isAtendida()){
+                cardView.setCardBackgroundColor(Color.rgb(224,168,0));
+            }
         }
 
         @Override
