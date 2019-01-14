@@ -83,7 +83,8 @@
             android:layout_marginTop="20dp"
             android:onClick="eliminarNotificacion"
             android:text="Eliminar"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="invisible" />
 
 
     </LinearLayout>

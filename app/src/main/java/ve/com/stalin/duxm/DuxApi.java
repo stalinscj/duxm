@@ -22,7 +22,7 @@ public interface DuxApi {
     @GET("alertas/{id}/")
     Call<ResponseBody> getAlertaDetalle(@Path("id") int id);
 
-    @PUT("notificados/{id}/")
+    @PUT("notificaciones/{id}/")
     Call<ResponseBody> actualizarNotificacion(@Path("id") String id, @Body PutNotificacionBody putNotificacionBody);
 
 }
